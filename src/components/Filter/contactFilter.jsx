@@ -1,23 +1,18 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { changeFilter } from 'contactsStorage/contactsSlice';
-import styles from './contactFilter.module.css';
+import { useDispatch } from 'react-redux';
+import { filterContacts } from 'redux/filterSlice';
+import css from './contactFilter.module.css';
 
-export const ContactsFilter = () => {
+function Filter() {
   const dispatch = useDispatch();
-  const filter = useSelector(state => state.contacts.filter);
-
-  const onChange = element => {
-    dispatch(changeFilter(element.currentTarget.value));
-  };
-
   return (
-    <div className={styles.section}>
-      <h2>Find contacts by name</h2>
+    <div className={css.filterContainer}>
       <input
-        className={styles.input}
-        onChange={onChange}
-        value={filter}
-      ></input>
+        type="text"
+        onChange={e => dispatch(filterContacts(e.target.value))}
+        placeholder="Start typing to find a contact"
+      />
     </div>
   );
-};
+}
+
+export default Filter;

@@ -1,9 +1,50 @@
-.section {
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  margin-top: 25px;
-  padding: 20px;
-  border: 2px solid rgb(241, 237, 31);
-  border-radius: 30px;
+.contactList {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+.contactListItem:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.contactListName,
+.contactListNumber {
+  display: inline-block;
+  min-width: 150px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  margin-right: 10px;
+  line-height: 1.1;
+}
+
+.deleteButton {
+  font-family: inherit;
+  display: inline-block;
+  border: 2px solid #e81615;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #e81615;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.1;
+  transition: background-color 0.2s ease-in-out, border 0.2s ease-in-out;
+}
+
+.deleteButton:hover {
+  background-color: #e81615;
+  color: #ffffff;
+}
+
+.isLoading {
+  text-align: center;
+  font-size: 18px;
+}
+
+.error {
+  text-align: center;
+  font-size: 24px;
 }

@@ -1,23 +1,48 @@
-import { useSelector } from 'react-redux';
-import { ContactsListItem } from './ListItems/contactListItem';
-import styles from './contactsList.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import css from './contactsList.module.css';
+import { deleteContact, fetchContacts } from 'redux/operations';
+import { getError, getFilteredContacts, getIsLoading } from 'redux/selectors';
+import { useEffect } from 'react';
 
-const getContacts = (items, filter) =>
-  items.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+function ContactList() {
+  const dispatch = useDispatch();
 
-export const ContactsList = () => {
-  const items = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.contacts.filter);
-  const contacts = getContacts(items, filter);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const filteredContacts = useSelector(getFilteredContacts);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+  console.log('isLoading', isLoading);
+
   return (
-    <ul className={styles.section}>
-      {contacts.length
-        ? contacts.map(({ id, name, number }) => (
-            <ContactsListItem key={id} id={id} name={name} number={number} />
-          ))
-        : 'No contacts'}
-    </ul>
+    <>
+      {isLoading === true && <div className={css.isLoading}>Loading...</div>}
+      {error && <div className={css.error}>{error}...Try again!</div>}
+      <ul className={css.contactList}>
+        {filteredContacts.map(contact => {
+          return (
+            <li
+              key={contact.id}
+              id={contact.id}
+              className={css.contactListItem}
+            >
+              <span className={css.contactListName}>{contact.nameInput}</span>
+              <span className={css.contactListNumber}>{contact.number}</span>
+              <button
+                className={css.deleteButton}
+                type="button"
+                onClick={() => dispatch(deleteContact(contact.id))}
+              >
+                Delete
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
-};
+}
+
+export default ContactList;

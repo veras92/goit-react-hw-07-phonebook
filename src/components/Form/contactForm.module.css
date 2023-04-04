@@ -1,47 +1,41 @@
-.section {
-  display: block;
-  width: 400px;
-  padding: 20px;
-  border: 2px solid rgb(241, 237, 31);
-  border-radius: 30px;
-}
-
-.label {
+.ContactForm {
+  text-align: center;
   display: flex;
   flex-direction: column;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  gap: 20px;
 }
 
-.input {
-  width: 300px;
-  height: 20px;
-  margin-top: 10px;
-  padding-left: 10px;
-  border: 1px solid black;
+.inputLabel:first-child {
+  margin-left: 17px;
+}
+
+.inputLabel input {
+  max-width: 350px;
+  width: 100%;
+  margin-left: 10px;
+  padding: 10px 20px;
   border-radius: 5px;
+  border: 1px solid black;
   outline: none;
 }
 
-.input:hover,
-.input:focus {
-  border-color: rgb(241, 237, 31);
+.inputLabel input:focus {
+  border-color: #7f16bf;
 }
 
-.button {
-  background-color: whitesmoke;
-  width: 200px;
-  height: 30px;
-  margin-top: 10px;
+.formButton {
+  align-self: center;
+  padding: 10px 20px;
+  border: none;
   border-radius: 5px;
-  border: 1px solid rgb(126, 22, 191);
+  background-color: #7f16bf;
+  color: aliceblue;
   cursor: pointer;
+  max-width: 150px;
   font-size: 16px;
-  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.button:hover {
-  border-color: rgb(17, 193, 29);
-  color: rgb(17, 193, 29);
+.formButton:hover {
+  background-color: #12c01d;
 }

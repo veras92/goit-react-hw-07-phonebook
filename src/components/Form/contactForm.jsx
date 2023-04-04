@@ -1,78 +1,91 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from 'contactsStorage/contactsSlice';
-import { nanoid } from 'nanoid';
-import Notiflix from 'notiflix';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/operations';
+import { getContacts } from 'redux/selectors';
+import css from './contactForm.module.css';
 
-import styles from './contactForm.module.css';
-
-export const ContactForm = () => {
-  const [form, setForm] = useState({ name: '', number: '' });
-
+function ContactForm() {
+  const [nameInput, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
 
-  const handleChange = element => {
-    const { name, value } = element.currentTarget;
-    setForm(prevForm => ({ ...prevForm, [name]: value }));
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  const handleSubmit = element => {
-    element.preventDefault();
+  const handleSubmit = event => {
+    event.preventDefault();
 
-    const data = { id: nanoid(), ...form };
-    if (
-      contacts.find(
-        contact => contact.name.toLowerCase() === data.name.toLowerCase()
-      )
-    ) {
-      inputClean();
-      return Notiflix.Notify.failure(`${data.name} is already in phonebook`);
+    const contact = {
+      id: nanoid(),
+      nameInput,
+      number,
+    };
+
+    const isInContacts = contacts.find(
+      item => item.nameInput.toLowerCase() === contact.nameInput.toLowerCase()
+    );
+
+    if (isInContacts) {
+      alert(`${contact.nameInput} is already in contact list!`);
+      return;
     }
 
-    dispatch(addContact(data));
-
-    inputClean();
+    dispatch(addContact(contact));
+    formReset();
   };
 
-  const inputClean = () => {
-    setForm({ name: '', number: '' });
+  const formReset = () => {
+    setName('');
+    setNumber('');
   };
 
-  const { name, number } = form;
   return (
-    <div className={styles.section}>
-      <form onSubmit={handleSubmit}>
-        <label className={styles.label}>
-          Name
-          <input
-            className={styles.input}
-            type="text"
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            value={name}
-            onChange={handleChange}
-          />
-        </label>
-        <label className={styles.label}>
-          Number
-          <input
-            className={styles.input}
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            value={number}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit" className={styles.button}>
-          Add contact
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className={css.ContactForm}>
+      <label htmlFor="name" className={css.inputLabel}>
+        Name
+        <input
+          className={css.input}
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          onChange={handleInputChange}
+          value={nameInput}
+        />
+      </label>
+      <label htmlFor="number" className={css.inputLabel}>
+        Number
+        <input
+          className={css.input}
+          type="tel"
+          name="number"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          onChange={handleInputChange}
+          value={number}
+        />
+      </label>
+
+      <button type="submit" className={css.formButton}>
+        Add contact
+      </button>
+    </form>
   );
-};
+}
+
+export default ContactForm;
